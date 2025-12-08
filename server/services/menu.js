@@ -33,7 +33,7 @@ module.exports = createCoreService(UID_MENU, ({ strapi }) => ({
     const { data } = params;
 
     // Get the menu we are about to update so we can compare it to new data.
-    const entityToUpdate = await getService('menu').findOne(id, {
+    const entityToUpdate = await getService('menu').findOne({ _id: { $eq: id } }, {
       populate: ['items', 'items.parent'],
     });
 
