@@ -55,7 +55,15 @@ module.exports = createCoreController(UID_MENU, ({ strapi }) => ({
     const params = isNested ? getNestedParams(query) : query;
     const keepParentData = hasParentPopulation(query);
 
-    const entity = await getService('menu').findOne(id, params);
+    // Sanitize id by ensuring it's a string
+    const sanitizedId = String(id);
+    // Sanitize params by ensuring filters use $eq
+    const sanitizedParams = {
+      ...params,
+      filters: params.filters ? { $eq: params.filters } : undefined
+    };
+
+    const entity = await getService('menu').findOne(sanitizedId, sanitizedParams);
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
     const transformedEntity = this.transformResponse(sanitizedEntity);
 
